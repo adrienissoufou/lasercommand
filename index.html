@@ -28,6 +28,17 @@
   </head>
   <body>
     <svg id="game-area" width="800" height="600">
+      <defs>
+        <g id="city">
+          <path d="M 3,0 v -20 h 10 v -6 h 14 v 4 h 10 v 6 h 10 v 16 z"
+                style="fill:#0000ff"/>
+          <path d="M 7.270048,0.10061889 V -17.019169 h 10.787813 v -5.159391
+                   h 6.331978 v 5.159391 h 5.628424 v 6.801011 h 8.208119
+                   v 4.6903537 h 6.566495 V 0.10061889 H 27.204052
+                   V -5.5278043 H 15.712685 v 5.62842319 z"
+                style="fill:#00ffff"/>
+        </g>
+      </defs>
       <!-- black background -->
       <rect x="0" y="0" width="800" height="600" style="fill:#000000"/>
 
@@ -37,20 +48,12 @@
             style="fill:#ffff00"/>
 
       <!-- city -->
-      <g id="city1" transform="translate(125,575)">
-        <path d="M 3,0 v -20 h 10 v -6 h 14 v 4 h 10 v 6 h 10 v 16 z"
-              style="fill:#0000ff"/>
-        <path d="M 7.270048,0.10061889 V -17.019169 h 10.787813 v -5.159391
-                 h 6.331978 v 5.159391 h 5.628424 v 6.801011 h 8.208119
-                 v 4.6903537 h 6.566495 V 0.10061889 H 27.204052
-                 V -5.5278043 H 15.712685 v 5.62842319 z"
-              style="fill:#00ffff"/>
-      </g>
-      <use id="city2" xlink:href="#city1" transform="translate(50,0)"/>
-      <use id="city3" xlink:href="#city1" transform="translate(100,0)"/>
-      <use id="city4" xlink:href="#city1" transform="translate(400,0)"/>
-      <use id="city5" xlink:href="#city1" transform="translate(450,0)"/>
-      <use id="city6" xlink:href="#city1" transform="translate(500,0)"/>
+      <use id="city1" xlink:href="#city" transform="translate(125,575)"/>
+      <use id="city2" xlink:href="#city" transform="translate(175,575)"/>
+      <use id="city3" xlink:href="#city" transform="translate(225,575)"/>
+      <use id="city4" xlink:href="#city" transform="translate(525,575)"/>
+      <use id="city5" xlink:href="#city" transform="translate(575,575)"/>
+      <use id="city6" xlink:href="#city" transform="translate(625,575)"/>
 
       <!-- lasers -->
       <g id="laser2" transform="translate(400,525)">
