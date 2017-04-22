@@ -28,6 +28,11 @@ var WORD_X_START_BORDER = 100;
 var WORD_Y_START = -10;
 var WORD_Y_END = 575;
 
+var CITY_POSITIONS = [
+  150, 200, 250,
+  550, 600, 650
+];
+
 function destroy_word_at(i)
 {
   words_elem.removeChild(inflight_words[i].elem);
@@ -52,7 +57,8 @@ function frame_cb()
     if (d >= 1.0) {
       destroy_word_at(i);
     } else {
-      w.elem.setAttribute("x", d * (w.end_x - w.start_x) + w.start_x);
+      var end_x = CITY_POSITIONS[w.target_city];
+      w.elem.setAttribute("x", d * (end_x - w.start_x) + w.start_x);
       w.elem.setAttribute("y", d * (WORD_Y_END - WORD_Y_START) + WORD_Y_START);
 
       i++;
@@ -106,8 +112,7 @@ function add_inflight_word()
     elem: elem,
     start_x: (Math.random() * (GAME_WIDTH - WORD_X_START_BORDER * 2.0) +
               WORD_X_START_BORDER),
-    end_x: (Math.random() * (GAME_WIDTH - WORD_X_START_BORDER * 2.0) +
-            WORD_X_START_BORDER),
+    target_city: Math.floor(Math.random() * CITY_POSITIONS.length),
     start_time: performance.now(),
     duration: (Math.random() * 3.0 + 1.0) * Math.pow(1.1, word.length - 1),
     highlighted: 0,
