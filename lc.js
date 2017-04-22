@@ -109,7 +109,7 @@ function add_inflight_word()
     end_x: (Math.random() * (GAME_WIDTH - WORD_X_START_BORDER * 2.0) +
             WORD_X_START_BORDER),
     start_time: performance.now(),
-    duration: Math.random() * 3.0 + 1.0,
+    duration: (Math.random() * 3.0 + 1.0) * Math.pow(1.1, word.length - 1),
     highlighted: 0,
   };
 
