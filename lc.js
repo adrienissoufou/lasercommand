@@ -20,12 +20,24 @@ var SVG_NS = "http://www.w3.org/2000/svg";
 
 var inflight_words = [];
 var words_elem;
+var word_input;
 var frame_queued = false;
 
 var GAME_WIDTH = 800;
 var WORD_X_START_BORDER = 100;
 var WORD_Y_START = -10;
 var WORD_Y_END = 575;
+
+function destroy_word_at(i)
+{
+  words_elem.removeChild(inflight_words[i].elem);
+
+  /* Move the last word over the top of this one */
+  if (i < inflight_words.length - 1)
+    inflight_words[i] = inflight_words[inflight_words.length - 1];
+
+  inflight_words.pop();
+}
 
 function frame_cb()
 {
@@ -38,10 +50,7 @@ function frame_cb()
     var d = (now - w.start_time) / w.duration / 1000.0;
 
     if (d >= 1.0) {
-      if (i < inflight_words.length - 1)
-        inflight_words[i] = inflight_words[inflight_words.length - 1];
-      inflight_words.pop();
-      words_elem.removeChild(w.elem);
+      destroy_word_at(i);
     } else {
       w.elem.setAttribute("x", d * (w.end_x - w.start_x) + w.start_x);
       w.elem.setAttribute("y", d * (WORD_Y_END - WORD_Y_START) + WORD_Y_START);
@@ -101,6 +110,7 @@ function add_inflight_word()
             WORD_X_START_BORDER),
     start_time: performance.now(),
     duration: Math.random() * 3.0 + 1.0,
+    highlighted: 0,
   };
 
   inflight_words.push(w);
@@ -110,10 +120,86 @@ function add_inflight_word()
   setTimeout(add_inflight_word, Math.random() * 4000.0 + 1000.0);
 }
 
+function mousedown_cb(event)
+{
+  document.getElementById("inputbox").focus();
+  event.preventDefault();
+}
+
+function calculate_highlight(value, word)
+{
+  var start = value.length;
+
+  if (start > word.length)
+    start = word.length;
+
+  for (; start >= 1; start--) {
+    if (word.startsWith(value.substring(value.length - start)))
+      return start;
+  }
+
+  return 0;
+}
+
+function set_highlight(w, highlight)
+{
+  if (highlight == w.highlighted)
+    return;
+
+  while (w.elem.lastChild)
+    w.elem.removeChild(w.elem.lastChild);
+
+  if (highlight == 0) {
+    w.elem.appendChild(document.createTextNode(w.word));
+  } else {
+    var tspan = document.createElementNS(SVG_NS, "tspan");
+    tspan.setAttribute("class", "highlighted");
+    tspan.appendChild(document.createTextNode(w.word.substring(0, highlight)));
+    w.elem.appendChild(tspan);
+
+    if (highlight < w.word.length) {
+      tspan = document.createElementNS(SVG_NS, "tspan");
+      tspan.appendChild(document.createTextNode(w.word.substring(highlight)));
+      w.elem.appendChild(tspan);
+    }
+  }
+
+  w.highlighted = highlight;
+}
+
+function input_cb()
+{
+  var value = word_input.value;
+  var killed_word = false;
+
+  for (var i = 0; i < inflight_words.length;) {
+    var w = inflight_words[i];
+    var highlight = calculate_highlight(value, w.word);
+
+    if (highlight >= w.word.length) {
+      destroy_word_at(i);
+      killed_word = true;
+    } else {
+      set_highlight(w, highlight);
+      i++;
+    }
+  }
+
+  if (killed_word) {
+    word_input.value = "";
+    for (var i = 0; i < inflight_words.length; i++)
+      set_highlight(inflight_words[i], 0);
+  }
+}
+
 function initialise()
 {
+  word_input = document.getElementById("inputbox");
   words_elem = document.getElementById("words");
   add_inflight_word();
+  var game_area = document.getElementById("game-area");
+  game_area.addEventListener("mousedown", mousedown_cb);
+  word_input.addEventListener("input", input_cb);
 }
 
 window.onload = initialise;

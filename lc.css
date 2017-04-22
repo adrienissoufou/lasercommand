@@ -26,3 +26,16 @@ body {
     text-anchor: middle;
     font-family: sans-serif;
 }
+
+#game-area {
+    position: absolute;
+    z-index: 1;
+}
+
+#inputbox {
+    position: absolute;
+}
+
+.highlighted {
+    fill: #ff0000;
+}
