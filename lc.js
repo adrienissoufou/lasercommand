@@ -22,6 +22,7 @@ var inflight_words = [];
 var words_elem;
 var word_input;
 var frame_queued = false;
+var start_time;
 
 var GAME_WIDTH = 800;
 var WORD_X_START_BORDER = 100;
@@ -134,7 +135,12 @@ function add_inflight_word()
 
   queue_frame();
 
-  setTimeout(add_inflight_word, Math.random() * 4000.0 + 1000.0);
+  var next_time = Math.random() * 4000.0 + 1000.0;
+  /* Speed up the word rate over time */
+  var elapsed = performance.now() - start_time;
+  next_time /= Math.pow(1.01, elapsed / 1000.0);
+
+  setTimeout(add_inflight_word, next_time);
 }
 
 function mousedown_cb(event)
@@ -214,6 +220,8 @@ function initialise()
   cities_alive = new Array(CITY_POSITIONS.length);
   for (var i = 0; i < cities_alive.length; i++)
     cities_alive[i] = true;
+
+  start_time = performance.now();
 
   word_input = document.getElementById("inputbox");
   words_elem = document.getElementById("words");
