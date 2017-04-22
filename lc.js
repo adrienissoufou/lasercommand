@@ -33,6 +33,8 @@ var CITY_POSITIONS = [
   550, 600, 650
 ];
 
+var cities_alive;
+
 function destroy_word_at(i)
 {
   words_elem.removeChild(inflight_words[i].elem);
@@ -42,6 +44,13 @@ function destroy_word_at(i)
     inflight_words[i] = inflight_words[inflight_words.length - 1];
 
   inflight_words.pop();
+}
+
+function destroy_city(city_num)
+{
+  cities_alive[city_num] = false;
+  var elem = document.getElementById("city" + (city_num + 1));
+  elem.setAttribute("visibility", "hidden");
 }
 
 function frame_cb()
@@ -56,6 +65,9 @@ function frame_cb()
 
     if (d >= 1.0) {
       destroy_word_at(i);
+
+      if (cities_alive[w.target_city])
+        destroy_city(w.target_city);
     } else {
       var end_x = CITY_POSITIONS[w.target_city];
       w.elem.setAttribute("x", d * (end_x - w.start_x) + w.start_x);
@@ -199,6 +211,10 @@ function input_cb()
 
 function initialise()
 {
+  cities_alive = new Array(CITY_POSITIONS.length);
+  for (var i = 0; i < cities_alive.length; i++)
+    cities_alive[i] = true;
+
   word_input = document.getElementById("inputbox");
   words_elem = document.getElementById("words");
   add_inflight_word();
