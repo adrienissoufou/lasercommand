@@ -19,6 +19,7 @@
 var SVG_NS = "http://www.w3.org/2000/svg";
 
 var inflight_words = [];
+var laser_beams = [];
 var words_elem;
 var word_input;
 var frame_queued = false;
@@ -28,24 +29,34 @@ var GAME_WIDTH = 800;
 var WORD_X_START_BORDER = 100;
 var WORD_Y_START = -10;
 var WORD_Y_END = 575;
+var LASER_Y = 525;
+var LASER_TIME = 250.0;
 
 var CITY_POSITIONS = [
   150, 200, 250,
   550, 600, 650
 ];
 
+var LASER_POSITIONS = [
+  50, 400, 750
+];
+
 var cities_alive;
 var started = false;
+
+function remove_at(ary, i)
+{
+  /* Move the last element over the top of this one */
+  if (i < ary.length - 1)
+    ary[i] = ary[ary.length - 1];
+
+  ary.pop();
+}
 
 function destroy_word_at(i)
 {
   words_elem.removeChild(inflight_words[i].elem);
-
-  /* Move the last word over the top of this one */
-  if (i < inflight_words.length - 1)
-    inflight_words[i] = inflight_words[inflight_words.length - 1];
-
-  inflight_words.pop();
+  remove_at(inflight_words, i);
 }
 
 function destroy_city(city_num)
@@ -79,7 +90,21 @@ function frame_cb()
     }
   }
 
-  if (inflight_words.length > 0)
+  for (var i = 0; i < laser_beams.length;) {
+    var b = laser_beams[i];
+
+    var d = now - b.start_time;
+
+    if (d >= LASER_TIME) {
+      words_elem.removeChild(b.elem);
+      remove_at(laser_beams, i);
+    } else {
+      b.elem.setAttribute("opacity", Math.cos(d * Math.PI / LASER_TIME));
+      i++;
+    }
+  }
+
+  if (inflight_words.length > 0 || laser_beams.length > 0)
     queue_frame();
 }
 
@@ -198,6 +223,20 @@ function set_highlight(w, highlight)
   w.highlighted = highlight;
 }
 
+function add_laser_beam(tx, ty)
+{
+  var elem = document.createElementNS(SVG_NS, "path");
+  elem.setAttribute("class", "laser-beam");
+  var laser = Math.floor(Math.random() * LASER_POSITIONS.length);
+  elem.setAttribute("d",
+                    "M " + LASER_POSITIONS[laser] + "," + LASER_Y + " " +
+                    "L " + tx + "," + ty);
+  words_elem.appendChild(elem);
+  var beam = { elem: elem, start_time: performance.now() };
+  laser_beams.push(beam);
+  queue_frame();
+}
+
 function input_cb()
 {
   var value = word_input.value;
@@ -208,6 +247,8 @@ function input_cb()
     var highlight = calculate_highlight(value, w.word);
 
     if (highlight >= w.word.length) {
+      add_laser_beam(w.elem.getAttribute("x"),
+                     w.elem.getAttribute("y"));
       destroy_word_at(i);
       killed_word = true;
     } else {

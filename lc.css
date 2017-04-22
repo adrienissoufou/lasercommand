@@ -47,3 +47,8 @@ body {
     text-anchor: middle;
     text-align: center;
 }
+
+.laser-beam {
+    stroke: #ff0000;
+    stroke-width: 2px;
+}
