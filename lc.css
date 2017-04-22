@@ -39,3 +39,11 @@ body {
 .highlighted {
     fill: #ff0000;
 }
+
+#intro-text {
+    font-family: monospace;
+    fill: #ff0000;
+    font-size: 100px;
+    text-anchor: middle;
+    text-align: center;
+}

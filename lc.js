@@ -35,6 +35,7 @@ var CITY_POSITIONS = [
 ];
 
 var cities_alive;
+var started = false;
 
 function destroy_word_at(i)
 {
@@ -147,6 +148,13 @@ function mousedown_cb(event)
 {
   document.getElementById("inputbox").focus();
   event.preventDefault();
+
+  if (!started) {
+    start_time = performance.now();
+    add_inflight_word();
+    started = true;
+    document.getElementById("intro").setAttribute("visibility", "hidden");
+  }
 }
 
 function calculate_highlight(value, word)
@@ -221,11 +229,8 @@ function initialise()
   for (var i = 0; i < cities_alive.length; i++)
     cities_alive[i] = true;
 
-  start_time = performance.now();
-
   word_input = document.getElementById("inputbox");
   words_elem = document.getElementById("words");
-  add_inflight_word();
   var game_area = document.getElementById("game-area");
   game_area.addEventListener("mousedown", mousedown_cb);
   word_input.addEventListener("input", input_cb);
