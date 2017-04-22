@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<!--
+ * Laser Command - A typing game
+ * Copyright (C) 2017  Neil Roberts
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html lang="fr-FR">
+  <head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="words-fr.js"></script>
+    <script type="text/javascript" src="lc.js"></script>
+    <link rel="stylesheet" href="lc.css">
+    <title>Laser Command</title>
+  </head>
+  <body>
+    <svg id="game-area" width="800" height="600">
+      <!-- black background -->
+      <rect x="0" y="0" width="800" height="600" style="fill:#000000"/>
+
+      <!-- yellow hills -->
+      <path d="M 0,525 h 75 l 50,50 h 150 l 50,-50 h 150
+               l 50,50 h 150 l 50,-50 h 75 v 75 h -800 z"
+            style="fill:#ffff00"/>
+
+      <!-- city -->
+      <g id="city1" transform="translate(125,575)">
+        <path d="M 3,0 v -20 h 10 v -6 h 14 v 4 h 10 v 6 h 10 v 16 z"
+              style="fill:#0000ff"/>
+        <path d="M 7.270048,0.10061889 V -17.019169 h 10.787813 v -5.159391
+                 h 6.331978 v 5.159391 h 5.628424 v 6.801011 h 8.208119
+                 v 4.6903537 h 6.566495 V 0.10061889 H 27.204052
+                 V -5.5278043 H 15.712685 v 5.62842319 z"
+              style="fill:#00ffff"/>
+      </g>
+      <use id="city2" xlink:href="#city1" transform="translate(50,0)"/>
+      <use id="city3" xlink:href="#city1" transform="translate(100,0)"/>
+      <use id="city4" xlink:href="#city1" transform="translate(400,0)"/>
+      <use id="city5" xlink:href="#city1" transform="translate(450,0)"/>
+      <use id="city6" xlink:href="#city1" transform="translate(500,0)"/>
+
+      <!-- lasers -->
+      <g id="laser2" transform="translate(400,525)">
+        <path d="M 0,0 h -12 a 12,12 3.141592654 0,1 24,0 z"
+              style="fill:#808080"/>
+        <path d="M 0,0 h -8 a 8,8 3.141592654 0,1 16,0 z"
+              style="fill:#ff0000"/>
+      </g>
+      <use id="laser1" xlink:href="#laser2" transform="translate(-350,0)"/>
+      <use id="laser3" xlink:href="#laser2" transform="translate(350,0)"/>
+
+      <g id="words"/>
+    </svg>
+  </body>
+</html>
