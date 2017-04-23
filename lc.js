@@ -22,8 +22,11 @@ var inflight_words = [];
 var laser_beams = [];
 var words_elem;
 var word_input;
-var frame_queued = false;
 var start_time;
+
+var state;
+var animation_frame;
+var add_word_timeout;
 
 var GAME_WIDTH = 800;
 var WORD_X_START_BORDER = 100;
@@ -42,7 +45,6 @@ var LASER_POSITIONS = [
 ];
 
 var cities_alive;
-var started = false;
 
 function remove_at(ary, i)
 {
@@ -64,11 +66,18 @@ function destroy_city(city_num)
   cities_alive[city_num] = false;
   var elem = document.getElementById("city" + (city_num + 1));
   elem.setAttribute("visibility", "hidden");
+
+  for (var i = 0; i < cities_alive.length; i++) {
+    if (cities_alive[i])
+      return;
+  }
+
+  set_state("game-over");
 }
 
 function frame_cb()
 {
-  frame_queued = false;
+  animation_frame = undefined;
 
   var now = performance.now();
 
@@ -110,12 +119,10 @@ function frame_cb()
 
 function queue_frame()
 {
-  if (frame_queued)
+  if (animation_frame !== undefined)
     return;
 
-  frame_queued = true;
-
-  requestAnimationFrame(frame_cb);
+  animation_frame = requestAnimationFrame(frame_cb);
 }
 
 function get_word()
@@ -137,6 +144,8 @@ function get_word()
 
 function add_inflight_word()
 {
+  add_word_timeout = undefined;
+
   var word = get_word();
 
   var elem = document.createElementNS(SVG_NS, "text");
@@ -166,7 +175,7 @@ function add_inflight_word()
   var elapsed = performance.now() - start_time;
   next_time /= Math.pow(1.01, elapsed / 1000.0);
 
-  setTimeout(add_inflight_word, next_time);
+  add_word_timeout = setTimeout(add_inflight_word, next_time);
 }
 
 function mousedown_cb(event)
@@ -174,12 +183,10 @@ function mousedown_cb(event)
   document.getElementById("inputbox").focus();
   event.preventDefault();
 
-  if (!started) {
-    start_time = performance.now();
-    add_inflight_word();
-    started = true;
-    document.getElementById("intro").setAttribute("visibility", "hidden");
-  }
+  if (state == "title")
+    set_state("running");
+  else if (state == "game-over")
+    set_state("title");
 }
 
 function calculate_highlight(value, word)
@@ -264,17 +271,62 @@ function input_cb()
   }
 }
 
+function set_state(new_state)
+{
+  state = new_state;
+
+  if (animation_frame !== undefined) {
+    cancelAnimationFrame(animation_frame);
+    animation_frame = undefined;
+  }
+  if (add_word_timeout !== undefined) {
+    clearTimeout(add_word_timeout);
+    add_word_timeout = undefined;
+  }
+
+  for (var i = 0; i < cities_alive.length; i++)
+    cities_alive[i] = true;
+
+  while (words_elem.lastChild)
+    words_elem.removeChild(words_elem.lastChild);
+
+  inflight_words = [];
+  laser_beams = [];
+
+  for (var i = 1; i <= CITY_POSITIONS.length; i++) {
+    var city = document.getElementById("city" + i);
+    city.setAttribute("visibility",
+                      state == "game-over" ?
+                      "hidden" :
+                      "visible");
+  }
+
+  document.getElementById("intro").setAttribute("visibility",
+                                                state == "title" ?
+                                                "visible" :
+                                                "hidden");
+  document.getElementById("game-over").setAttribute("visibility",
+                                                    state == "game-over" ?
+                                                    "visible" :
+                                                    "hidden");
+
+  if (state == "running") {
+    start_time = performance.now();
+    add_inflight_word();
+  }
+}
+
 function initialise()
 {
   cities_alive = new Array(CITY_POSITIONS.length);
-  for (var i = 0; i < cities_alive.length; i++)
-    cities_alive[i] = true;
 
   word_input = document.getElementById("inputbox");
   words_elem = document.getElementById("words");
   var game_area = document.getElementById("game-area");
   game_area.addEventListener("mousedown", mousedown_cb);
   word_input.addEventListener("input", input_cb);
+
+  set_state("title");
 }
 
 window.onload = initialise;

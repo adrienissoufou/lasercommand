@@ -38,6 +38,10 @@
                    V -5.5278043 H 15.712685 v 5.62842319 z"
                 style="fill:#00ffff"/>
         </g>
+        <text id="game-over-text">
+          <tspan x="400" y="280">GAME</tspan>
+          <tspan x="400" dy="80">OVER</tspan>
+        </text>
       </defs>
       <!-- black background -->
       <rect x="0" y="0" width="800" height="600" style="fill:#000000"/>
@@ -108,6 +112,12 @@
               d="M 550,545 l -7,-10 h 14 z
                  M 650,545 l -7,-10 h 14 z
                  M 600,545 l -7,-10 h 14 z"/>
+      </g>
+
+      <!-- game over screen -->
+      <g id="game-over" visibility="hidden">
+        <use xlink:href="#game-over-text" class="game-over-outline"/>
+        <use xlink:href="#game-over-text" class="game-over-fill"/>
       </g>
     </svg>
     <input type="text" id="inputbox"/>

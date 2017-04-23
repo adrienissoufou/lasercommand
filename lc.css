@@ -52,3 +52,21 @@ body {
     stroke: #ff0000;
     stroke-width: 2px;
 }
+
+.game-over-outline, .game-over-fill {
+    font-family: sans-serif;
+    fill: #ff0000;
+    text-anchor: middle;
+    text-align: center;
+    font-size: 100px;
+    font-weight: bold;
+}
+
+.game-over-fill {
+    fill: #ff0000;
+}
+
+.game-over-outline {
+    stroke-width: 8px;
+    stroke: #800000;
+}
