@@ -191,21 +191,6 @@ function mousedown_cb(event)
     set_state("title");
 }
 
-function calculate_highlight(value, word)
-{
-  var start = value.length;
-
-  if (start > word.length)
-    start = word.length;
-
-  for (; start >= 1; start--) {
-    if (word.startsWith(value.substring(value.length - start)))
-      return start;
-  }
-
-  return 0;
-}
-
 function set_highlight(w, highlight)
 {
   if (highlight == w.highlighted)
@@ -246,32 +231,37 @@ function add_laser_beam(tx, ty)
   queue_frame();
 }
 
+function highlight_letter(letter)
+{
+  for (var i = 0; i < inflight_words.length; i++) {
+    var w = inflight_words[i];
+
+    if (w.word[w.highlighted] == letter) {
+      set_highlight(w, w.highlighted + 1);
+
+      if (w.highlighted >= w.word.length) {
+        add_laser_beam(w.elem.getAttribute("x"),
+                       w.elem.getAttribute("y"));
+        destroy_word_at(i);
+        killed_word = true;
+        add_score(w.word.length);
+        i--;
+      }
+    }
+  }
+}
+
 function input_cb()
 {
   var value = word_input.value;
-  var killed_word = false;
 
-  for (var i = 0; i < inflight_words.length;) {
-    var w = inflight_words[i];
-    var highlight = calculate_highlight(value, w.word);
+  if (value.length == 0)
+    return;
 
-    if (highlight >= w.word.length) {
-      add_laser_beam(w.elem.getAttribute("x"),
-                     w.elem.getAttribute("y"));
-      destroy_word_at(i);
-      killed_word = true;
-      add_score(w.word.length);
-    } else {
-      set_highlight(w, highlight);
-      i++;
-    }
-  }
+  for (var i = 0; i < value.length; i++)
+    highlight_letter(value[i]);
 
-  if (killed_word) {
-    word_input.value = "";
-    for (var i = 0; i < inflight_words.length; i++)
-      set_highlight(inflight_words[i], 0);
-  }
+  word_input.value = "";
 }
 
 function set_state(new_state)
