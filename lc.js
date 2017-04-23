@@ -21,12 +21,14 @@ var SVG_NS = "http://www.w3.org/2000/svg";
 var inflight_words = [];
 var laser_beams = [];
 var words_elem;
+var score_node;
 var word_input;
 var start_time;
 
 var state;
 var animation_frame;
 var add_word_timeout;
+var score = 0;
 
 var GAME_WIDTH = 800;
 var WORD_X_START_BORDER = 100;
@@ -258,6 +260,7 @@ function input_cb()
                      w.elem.getAttribute("y"));
       destroy_word_at(i);
       killed_word = true;
+      add_score(w.word.length);
     } else {
       set_highlight(w, highlight);
       i++;
@@ -314,6 +317,20 @@ function set_state(new_state)
     start_time = performance.now();
     add_inflight_word();
   }
+
+  if (state != "game-over")
+    set_score(0);
+}
+
+function set_score(new_score)
+{
+  score = new_score;
+  score_node.nodeValue = new_score;
+}
+
+function add_score(points)
+{
+  set_score(score + points);
 }
 
 function initialise()
@@ -325,6 +342,8 @@ function initialise()
   var game_area = document.getElementById("game-area");
   game_area.addEventListener("mousedown", mousedown_cb);
   word_input.addEventListener("input", input_cb);
+
+  score_node = document.getElementById("score").firstChild;
 
   set_state("title");
 }

@@ -70,3 +70,17 @@ body {
     stroke-width: 8px;
     stroke: #800000;
 }
+
+.score, .score-number {
+    fill: #ff00ff;
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+.score {
+    text-anchor: end;
+}
+
+.score-number {
+    text-anchor: start;
+}
