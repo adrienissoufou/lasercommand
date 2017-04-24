@@ -27,103 +27,105 @@
     <title>Laser Command</title>
   </head>
   <body>
-    <svg id="game-area" width="800" height="600">
-      <defs>
-        <g id="city">
-          <path d="M 3,0 v -20 h 10 v -6 h 14 v 4 h 10 v 6 h 10 v 16 z"
-                style="fill:#0000ff"/>
-          <path d="M 7.270048,0.10061889 V -17.019169 h 10.787813 v -5.159391
-                   h 6.331978 v 5.159391 h 5.628424 v 6.801011 h 8.208119
-                   v 4.6903537 h 6.566495 V 0.10061889 H 27.204052
-                   V -5.5278043 H 15.712685 v 5.62842319 z"
-                style="fill:#00ffff"/>
+    <div id="container">
+      <svg id="game-area" width="800" height="600">
+        <defs>
+          <g id="city">
+            <path d="M 3,0 v -20 h 10 v -6 h 14 v 4 h 10 v 6 h 10 v 16 z"
+                  style="fill:#0000ff"/>
+            <path d="M 7.270048,0.10061889 V -17.019169 h 10.787813 v -5.159391
+                     h 6.331978 v 5.159391 h 5.628424 v 6.801011 h 8.208119
+                     v 4.6903537 h 6.566495 V 0.10061889 H 27.204052
+                     V -5.5278043 H 15.712685 v 5.62842319 z"
+                  style="fill:#00ffff"/>
+          </g>
+          <text id="game-over-text">
+            <tspan x="400" y="280">GAME</tspan>
+            <tspan x="400" dy="80">OVER</tspan>
+          </text>
+        </defs>
+        <!-- black background -->
+        <rect x="0" y="0" width="800" height="600" style="fill:#000000"/>
+
+        <!-- yellow hills -->
+        <path d="M 0,525 h 75 l 50,50 h 150 l 50,-50 h 150
+                 l 50,50 h 150 l 50,-50 h 75 v 75 h -800 z"
+              style="fill:#ffff00"/>
+
+        <!-- city -->
+        <use id="city1" xlink:href="#city" transform="translate(125,575)"/>
+        <use id="city2" xlink:href="#city" transform="translate(175,575)"/>
+        <use id="city3" xlink:href="#city" transform="translate(225,575)"/>
+        <use id="city4" xlink:href="#city" transform="translate(525,575)"/>
+        <use id="city5" xlink:href="#city" transform="translate(575,575)"/>
+        <use id="city6" xlink:href="#city" transform="translate(625,575)"/>
+
+        <!-- lasers -->
+        <g id="laser2" transform="translate(400,525)">
+          <path d="M 0,0 h -12 a 12,12 3.141592654 0,1 24,0 z"
+                style="fill:#808080"/>
+          <path d="M 0,0 h -8 a 8,8 3.141592654 0,1 16,0 z"
+                style="fill:#ff0000"/>
         </g>
-        <text id="game-over-text">
-          <tspan x="400" y="280">GAME</tspan>
-          <tspan x="400" dy="80">OVER</tspan>
-        </text>
-      </defs>
-      <!-- black background -->
-      <rect x="0" y="0" width="800" height="600" style="fill:#000000"/>
+        <use id="laser1" xlink:href="#laser2" transform="translate(-350,0)"/>
+        <use id="laser3" xlink:href="#laser2" transform="translate(350,0)"/>
 
-      <!-- yellow hills -->
-      <path d="M 0,525 h 75 l 50,50 h 150 l 50,-50 h 150
-               l 50,50 h 150 l 50,-50 h 75 v 75 h -800 z"
-            style="fill:#ffff00"/>
+        <!-- container for the words -->
+        <g id="words"/>
 
-      <!-- city -->
-      <use id="city1" xlink:href="#city" transform="translate(125,575)"/>
-      <use id="city2" xlink:href="#city" transform="translate(175,575)"/>
-      <use id="city3" xlink:href="#city" transform="translate(225,575)"/>
-      <use id="city4" xlink:href="#city" transform="translate(525,575)"/>
-      <use id="city5" xlink:href="#city" transform="translate(575,575)"/>
-      <use id="city6" xlink:href="#city" transform="translate(625,575)"/>
+        <!-- score -->
+        <text x="700" y="35" class="score">Score:</text>
+        <text x="705" y="35" class="score-number" id="score">0</text>
 
-      <!-- lasers -->
-      <g id="laser2" transform="translate(400,525)">
-        <path d="M 0,0 h -12 a 12,12 3.141592654 0,1 24,0 z"
-              style="fill:#808080"/>
-        <path d="M 0,0 h -8 a 8,8 3.141592654 0,1 16,0 z"
-              style="fill:#ff0000"/>
-      </g>
-      <use id="laser1" xlink:href="#laser2" transform="translate(-350,0)"/>
-      <use id="laser3" xlink:href="#laser2" transform="translate(350,0)"/>
+        <!-- intro screen -->
+        <g id="intro">
+          <text id="intro-text">
+            <tspan x="400" y="250">LASER</tspan>
+            <tspan x="400" dy="1em">COMMAND</tspan>
+          </text>
+          <text style="text-anchor: middle;
+                       fill: #ff0000"
+                x="400" y="380">
+            cliquer pour commencer
+          </text>
 
-      <!-- container for the words -->
-      <g id="words"/>
+          <text x="200" y="100"
+                class="inflight_word"
+                style="text-anchor: end">après</text>
+          <path style="stroke: #ff0000; stroke-width: 2"
+                d="M 210,90 h 100"/>
+          <path style="fill: #ff0000;"
+                d="M 205,90 l 10,-5 v 10 z"/>
+          <text x="315" y="95"
+                style="font-size: 15px;
+                       text-anchor: start;
+                       fill: #ff0000">
+            taper les mots qui tombent pour tirer les lasers
+          </text>
 
-      <!-- score -->
-      <text x="700" y="35" class="score">Score:</text>
-      <text x="705" y="35" class="score-number" id="score">0</text>
+          <path style="stroke-width: 4; stroke: #ff0000"
+                d="M 550,540 c 0,-10 30,-50 40,-50
+                   M 650,540 c 0,-10 -30,-50 -40,-50
+                   M 600,540 v -50"/>
+          <text x="600" y="480"
+                style="font-size: 15px;
+                       text-anchor: middle;
+                       fill: #ff0000">
+            protéger les villes
+          </text>
+          <path style="fill: #ff0000;"
+                d="M 550,545 l -7,-10 h 14 z
+                   M 650,545 l -7,-10 h 14 z
+                   M 600,545 l -7,-10 h 14 z"/>
+        </g>
 
-      <!-- intro screen -->
-      <g id="intro">
-        <text id="intro-text">
-          <tspan x="400" y="250">LASER</tspan>
-          <tspan x="400" dy="1em">COMMAND</tspan>
-        </text>
-        <text style="text-anchor: middle;
-                     fill: #ff0000"
-              x="400" y="380">
-          cliquer pour commencer
-        </text>
-
-        <text x="200" y="100"
-              class="inflight_word"
-              style="text-anchor: end">après</text>
-        <path style="stroke: #ff0000; stroke-width: 2"
-              d="M 210,90 h 100"/>
-        <path style="fill: #ff0000;"
-              d="M 205,90 l 10,-5 v 10 z"/>
-        <text x="315" y="95"
-              style="font-size: 15px;
-                     text-anchor: start;
-                     fill: #ff0000">
-          taper les mots qui tombent pour tirer les lasers
-        </text>
-
-        <path style="stroke-width: 4; stroke: #ff0000"
-              d="M 550,540 c 0,-10 30,-50 40,-50
-                 M 650,540 c 0,-10 -30,-50 -40,-50
-                 M 600,540 v -50"/>
-        <text x="600" y="480"
-              style="font-size: 15px;
-                     text-anchor: middle;
-                     fill: #ff0000">
-          protéger les villes
-        </text>
-        <path style="fill: #ff0000;"
-              d="M 550,545 l -7,-10 h 14 z
-                 M 650,545 l -7,-10 h 14 z
-                 M 600,545 l -7,-10 h 14 z"/>
-      </g>
-
-      <!-- game over screen -->
-      <g id="game-over" visibility="hidden">
-        <use xlink:href="#game-over-text" class="game-over-outline"/>
-        <use xlink:href="#game-over-text" class="game-over-fill"/>
-      </g>
-    </svg>
-    <input type="text" id="inputbox"/>
+        <!-- game over screen -->
+        <g id="game-over" visibility="hidden">
+          <use xlink:href="#game-over-text" class="game-over-outline"/>
+          <use xlink:href="#game-over-text" class="game-over-fill"/>
+        </g>
+      </svg>
+      <input type="text" id="inputbox"/>
+    </div>
   </body>
 </html>
